@@ -12,6 +12,12 @@ public class Carte implements Comparable<Carte>{
         this.sectiune = sectiune;
     }
 
+    public Carte(String autor, String titlu, String sectiune) {
+        this.autor = new Autor(autor);
+        this.titlu = titlu;
+        this.sectiune = sectiune;
+    }
+
     public Autor getAutor() {
         return autor;
     }
