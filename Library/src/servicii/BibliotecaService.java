@@ -1,7 +1,9 @@
 package servicii;
 
+import models.Autor;
 import models.Carte;
 import models.Cititor;
+import models.Sectiune;
 import repository.BibliotecaRepo;
 
 import java.util.List;
@@ -10,12 +12,26 @@ public class BibliotecaService {
     private static BibliotecaRepo repoInstance = BibliotecaRepo.getInstance();
     private LoggingService logger = LoggingService.getInstance();
 
-    public boolean adaugaCarte(Carte carte) {
+    public void adaugaCarte(Carte carte) {
         logger.log("adaugaCarte");
-        if (!repoInstance.isValidSection(carte.getSectiune())) return false;
         repoInstance.addCarte(carte);
-        return true;
     }
+
+    public void stergeCarte(String titlu){
+        logger.log("stergeCarte");
+        repoInstance.remCarte(titlu);
+    }
+
+
+    public void adaugaAutor(Autor autor) {
+        logger.log("adaugaAutor");
+        repoInstance.addAutor(autor);
+    }
+    public void stergeAutor(String nume){
+        logger.log("adaugaAutor");
+        repoInstance.remAutor(nume);
+    }
+
 
     public Carte imprumutaCarte(Cititor cititor, String numeCarte) {
         logger.log("imprumutaCarte");

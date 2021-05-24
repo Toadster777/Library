@@ -15,7 +15,7 @@ public class SingletonWriter {
     }
 
     public void writeToFile(String data, String path)  {
-        try (FileWriter fileWriter = new FileWriter(path)){
+        try (FileWriter fileWriter = new FileWriter(path,true)){
             fileWriter.write(data);
         } catch (IOException e) {
             System.out.println(e.getMessage());

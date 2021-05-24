@@ -6,6 +6,7 @@ import models.Autor;
 import models.Carte;
 import models.Cititor;
 import models.Sectiune;
+import java.sql.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -24,12 +25,37 @@ public class BibliotecaRepo {
     private BibliotecaRepo() {
 
     }
-
-    public void addAutor(Autor autor) {
-        autori.add(autor);
+    private static Connection getConnection() {
+        try {
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_library", "root", "toor");
+        } catch (SQLException e) {
+            throw new RuntimeException("Nu s-a putut realiza conectarea la baza de date.");
+        }
     }
 
-    public void addAutors(Collection<Autor> autors) {
+    public void addAutor(Autor autor) {
+        //  autori.add(autor);
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into autor(Nume) values(?)");
+            preparedStatement.setString(1, autor.getName());
+            preparedStatement.executeUpdate();
+            System.out.println(" Autor Adaugat Cu Success");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void remAutor(String nume){
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from carte WHERE nume = ?;");
+            preparedStatement.setString(1, nume);
+            System.out.println("Autor sters cu succes");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   /* public void addAutors(Collection<Autor> autors) {
         autors.forEach(this::addAutor);
     }
 
@@ -42,6 +68,8 @@ public class BibliotecaRepo {
         }
         return true;
     }
+
+
 
 
     public void addCarti(Collection<Carte> carti) {
@@ -86,11 +114,56 @@ public class BibliotecaRepo {
 
 
 
+    */
+
     public void addCarte(Carte carte) {
-        carti.add(carte);
-        Collections.sort(carti);
-        sectiuni.get(carte.getSectiune()).adaugaCarte(carte);
+       // carti.add(carte); //inlocuieste cu adaugare cu jdbc in baza de date
+        //Collections.sort(carti);
+       // sectiuni.get(carte.getSectiune()).adaugaCarte(carte);
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into carte(titlu,autor,sectiune) values(?,?,?)");
+            preparedStatement.setString(1, carte.getTitlu());
+            preparedStatement.setString(2, carte.getAutor().getName());
+            preparedStatement.setString(3, carte.getSectiune());
+            preparedStatement.executeUpdate();
+            System.out.println(" Carte Adaugata Cu Success");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+    public void remCarte(String titlu){
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from carte WHERE titlu = ?;");
+            preparedStatement.setString(1, titlu);
+            System.out.println("Carte stearsa cu succes");
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addCititor(Cititor cititor) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into cititor(Nume, varsta) values(?,?)");
+            preparedStatement.setString(1, cititor.getNume());
+            preparedStatement.setInt(2, cititor.getVarsta());
+            preparedStatement.executeUpdate();
+            System.out.println("Cititor Adaugat cu succes");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void remCititor(String nume) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from cititor WHERE Nume like ?;");
+            preparedStatement.setString(1, nume);
+            System.out.println("Cititor sters cu succes");
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public Carte removeCarte(String titlu) {
         for (Carte carte : carti) {

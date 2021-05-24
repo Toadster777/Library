@@ -2,6 +2,8 @@ package servicii;
 
 import io.SingletonWriter;
 
+import java.sql.Timestamp;
+
 public class LoggingService {
     private static LoggingService instance = new LoggingService("log.csv");
     private SingletonWriter writer = SingletonWriter.getInstance();
@@ -17,6 +19,6 @@ public class LoggingService {
     }
 
     public void log(String acction) {
-        writer.writeToFile(acction + ", " + System.currentTimeMillis(), fileName);
+        writer.writeToFile("\n" + acction + ", " + new Timestamp(System.currentTimeMillis()), fileName);
     }
 }
