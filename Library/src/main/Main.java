@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         Carte carte = new Carte("Mihail Sadoveanu", "Baltagul", "Literatura Romana");
         BibliotecaService BS = new BibliotecaService();
-       // BS.adaugaCarte(carte);
+        BS.imprumutaCarte("Baltagul");
 
         Autor autor = new Autor("Mihail Sadoveanu");
        // BS.adaugaAutor(autor);
@@ -21,6 +21,6 @@ public class Main {
         CititorService CS = new CititorService();
       //  Cititor cititor = new Cititor("Toader Andrei", 21);
       //  CS.AdaugaCititor(cititor);
-        CS.StergeCititor("Toader Andrei");
+       // CS.StergeCititor("Toader Andrei");
    }
 }

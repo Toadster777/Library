@@ -49,6 +49,7 @@ public class BibliotecaRepo {
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE from carte WHERE nume = ?;");
             preparedStatement.setString(1, nume);
+            preparedStatement.executeUpdate();
             System.out.println("Autor sters cu succes");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,6 +112,16 @@ public class BibliotecaRepo {
         return true;
     }
 
+ public Carte removeCarte(String titlu) {
+        for (Carte carte : carti) {
+            if (carte.getTitlu().equals(titlu)) {
+                carti.remove(carte);
+                sectiuni.get(carte.getSectiune()).removeCarte(carte);
+                return carte;
+            }
+        }
+        return null;
+    }
 
 
 
@@ -121,10 +132,11 @@ public class BibliotecaRepo {
         //Collections.sort(carti);
        // sectiuni.get(carte.getSectiune()).adaugaCarte(carte);
         try (Connection connection = getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into carte(titlu,autor,sectiune) values(?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into carte(titlu,autor,sectiune,stare) values(?,?,?,?)");
             preparedStatement.setString(1, carte.getTitlu());
             preparedStatement.setString(2, carte.getAutor().getName());
             preparedStatement.setString(3, carte.getSectiune());
+            preparedStatement.setString(4, carte.getStare());
             preparedStatement.executeUpdate();
             System.out.println(" Carte Adaugata Cu Success");
         } catch (SQLException e) {
@@ -135,12 +147,26 @@ public class BibliotecaRepo {
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE from carte WHERE titlu = ?;");
             preparedStatement.setString(1, titlu);
-            System.out.println("Carte stearsa cu succes");
+            System.out.println("Carte Stearsa Cu Succes");
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void impCarte(String titlu){
+        try (Connection connection = getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE carte set Stare = ? WHERE titlu = ?;");
+            preparedStatement.setString(1, "Imprumutata");
+            preparedStatement.setString(2, titlu);
+            System.out.println("Carte Imprumutata Cu Succes");
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void addCititor(Cititor cititor) {
         try (Connection connection = getConnection()) {
@@ -148,7 +174,7 @@ public class BibliotecaRepo {
             preparedStatement.setString(1, cititor.getNume());
             preparedStatement.setInt(2, cititor.getVarsta());
             preparedStatement.executeUpdate();
-            System.out.println("Cititor Adaugat cu succes");
+            System.out.println("Cititor Adaugat Cu Succes");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -157,7 +183,7 @@ public class BibliotecaRepo {
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE from cititor WHERE Nume like ?;");
             preparedStatement.setString(1, nume);
-            System.out.println("Cititor sters cu succes");
+            System.out.println("Cititor Sters Cu Succes");
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -22,6 +22,11 @@ public class BibliotecaService {
         repoInstance.remCarte(titlu);
     }
 
+    public void imprumutaCarte(String titlu){
+        logger.log("imprumutaCarte");
+        repoInstance.impCarte(titlu);
+    }
+
 
     public void adaugaAutor(Autor autor) {
         logger.log("adaugaAutor");
